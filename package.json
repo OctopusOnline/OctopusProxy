@@ -1,0 +1,19 @@
+{
+  "name": "octopusproxy",
+  "author": "official5ETa",
+  "license": "Apache-2.0 license",
+  "private": false,
+  "workspaces": [
+    "packages/server",
+    "packages/client"
+  ],
+  "devDependencies": {
+    "lerna": "^8.1.5",
+    "typescript": "^5.5.3"
+  },
+  "scripts": {
+    "build": "lerna run build",
+    "clean": "lerna run clean",
+    "publish": "lerna publish"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@octopuscentral/server": ["packages/server/src"],
+      "@octopuscentral/client": ["packages/client/src"]
+    },
+    "strict": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "target": "ES6",
+    "module": "commonjs",
+    "declaration": true,
+    "sourceMap": true,
+    "composite": true
+  },
+  "include": ["packages/*/src"],
+  "exclude": ["node_modules", "dist"]
+}
