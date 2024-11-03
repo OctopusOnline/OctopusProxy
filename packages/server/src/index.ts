@@ -25,7 +25,7 @@ export class OctopusProxyServer {
     Logger.log('Prisma migrations deployed', 'PrismaClient');
   }
 
-  public async start(port: number = 8383): Promise<void> {
+  public async start(port: number = 8283): Promise<void> {
     process.env.PRISMA_DATABASE_URL = this.databaseUrl;
     if (this.app) return;
 

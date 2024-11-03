@@ -1,64 +1,76 @@
 "use strict";
-var __esDecorate = (this && this.__esDecorate) || function (ctor, descriptorIn, decorators, contextIn, initializers, extraInitializers) {
-    function accept(f) { if (f !== void 0 && typeof f !== "function") throw new TypeError("Function expected"); return f; }
-    var kind = contextIn.kind, key = kind === "getter" ? "get" : kind === "setter" ? "set" : "value";
-    var target = !descriptorIn && ctor ? contextIn["static"] ? ctor : ctor.prototype : null;
-    var descriptor = descriptorIn || (target ? Object.getOwnPropertyDescriptor(target, contextIn.name) : {});
-    var _, done = false;
-    for (var i = decorators.length - 1; i >= 0; i--) {
-        var context = {};
-        for (var p in contextIn) context[p] = p === "access" ? {} : contextIn[p];
-        for (var p in contextIn.access) context.access[p] = contextIn.access[p];
-        context.addInitializer = function (f) { if (done) throw new TypeError("Cannot add initializers after decoration has completed"); extraInitializers.push(accept(f || null)); };
-        var result = (0, decorators[i])(kind === "accessor" ? { get: descriptor.get, set: descriptor.set } : descriptor[key], context);
-        if (kind === "accessor") {
-            if (result === void 0) continue;
-            if (result === null || typeof result !== "object") throw new TypeError("Object expected");
-            if (_ = accept(result.get)) descriptor.get = _;
-            if (_ = accept(result.set)) descriptor.set = _;
-            if (_ = accept(result.init)) initializers.unshift(_);
-        }
-        else if (_ = accept(result)) {
-            if (kind === "field") initializers.unshift(_);
-            else descriptor[key] = _;
-        }
-    }
-    if (target) Object.defineProperty(target, contextIn.name, descriptor);
-    done = true;
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __runInitializers = (this && this.__runInitializers) || function (thisArg, initializers, value) {
-    var useValue = arguments.length > 2;
-    for (var i = 0; i < initializers.length; i++) {
-        value = useValue ? initializers[i].call(thisArg, value) : initializers[i].call(thisArg);
-    }
-    return useValue ? value : void 0;
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var __setFunctionName = (this && this.__setFunctionName) || function (f, name, prefix) {
-    if (typeof name === "symbol") name = name.description ? "[".concat(name.description, "]") : "";
-    return Object.defineProperty(f, "name", { configurable: true, value: prefix ? "".concat(prefix, " ", name) : name });
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProxyService = void 0;
 const common_1 = require("@nestjs/common");
-let ProxyService = (() => {
-    let _classDecorators = [(0, common_1.Injectable)()];
-    let _classDescriptor;
-    let _classExtraInitializers = [];
-    let _classThis;
-    var ProxyService = _classThis = class {
-        constructor(prisma) {
-            this.prisma = prisma;
-        }
-    };
-    __setFunctionName(_classThis, "ProxyService");
-    (() => {
-        const _metadata = typeof Symbol === "function" && Symbol.metadata ? Object.create(null) : void 0;
-        __esDecorate(null, _classDescriptor = { value: _classThis }, _classDecorators, { kind: "class", name: _classThis.name, metadata: _metadata }, null, _classExtraInitializers);
-        ProxyService = _classThis = _classDescriptor.value;
-        if (_metadata) Object.defineProperty(_classThis, Symbol.metadata, { enumerable: true, configurable: true, writable: true, value: _metadata });
-        __runInitializers(_classThis, _classExtraInitializers);
-    })();
-    return ProxyService = _classThis;
-})();
+const prisma_service_1 = require("./prisma.service");
+let ProxyService = class ProxyService {
+    constructor(prisma) {
+        this.prisma = prisma;
+    }
+    getProxyIpReservations(serviceId, instanceId) {
+        const where = {};
+        if (serviceId)
+            where.serviceId = serviceId;
+        if (instanceId)
+            where.instanceId = instanceId;
+        return this.prisma.proxyIpReservation.findMany({ where });
+    }
+    getProxy(serviceId_1, instanceId_1, country_1) {
+        return __awaiter(this, arguments, void 0, function* (serviceId, instanceId, country, reserve = true) {
+            let proxy = undefined;
+            const proxyReservations = yield this.getProxyIpReservations();
+            const ownProxyReservations = proxyReservations.filter(proxyReservation => proxyReservation.serviceId === serviceId &&
+                proxyReservation.instanceId === instanceId);
+            if (ownProxyReservations.length > 0) {
+                const proxyWhere = {
+                    active: true,
+                    OR: ownProxyReservations.map(proxyReservation => ({ ip: proxyReservation.ip }))
+                };
+                if (country)
+                    proxyWhere.country = country;
+                proxy = yield this.prisma.proxy.findFirst({ where: proxyWhere });
+            }
+            if (!proxy) {
+                const proxyWhere = { active: true };
+                if (country)
+                    proxyWhere.country = country;
+                if (proxyReservations)
+                    proxyWhere.NOT = { ip: { in: proxyReservations.map(proxyReservation => proxyReservation.ip) } };
+                proxy = yield this.prisma.proxy.findFirst({ where: proxyWhere });
+                if (reserve && proxy)
+                    yield this.prisma.proxyIpReservation.create({
+                        data: {
+                            ip: proxy.ip,
+                            serviceId,
+                            instanceId,
+                        }
+                    });
+            }
+            return proxy;
+        });
+    }
+};
 exports.ProxyService = ProxyService;
+exports.ProxyService = ProxyService = __decorate([
+    (0, common_1.Injectable)(),
+    __metadata("design:paramtypes", [prisma_service_1.PrismaService])
+], ProxyService);
 //# sourceMappingURL=proxy.service.js.map

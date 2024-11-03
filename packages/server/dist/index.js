@@ -59,7 +59,7 @@ class OctopusProxyServer {
         });
     }
     start() {
-        return __awaiter(this, arguments, void 0, function* (port = 8383) {
+        return __awaiter(this, arguments, void 0, function* (port = 8283) {
             process.env.PRISMA_DATABASE_URL = this.databaseUrl;
             if (this.app)
                 return;

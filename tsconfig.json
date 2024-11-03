@@ -5,7 +5,9 @@
       "@octopuscentral/server": ["packages/server/src"],
       "@octopuscentral/client": ["packages/client/src"]
     },
-    "strict": true,
+    "strict": false,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
     "moduleResolution": "node",
     "esModuleInterop": true,
     "skipLibCheck": true,
