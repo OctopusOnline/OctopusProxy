@@ -56,6 +56,7 @@ class WebshareScraper {
                 port: proxy.port,
                 username: proxy.username,
                 password: proxy.password,
+                country: proxy.country_code,
                 active: proxy.valid,
                 vendor: this.vendor,
             }));

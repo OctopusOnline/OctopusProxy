@@ -12,6 +12,7 @@ model Proxy {
   port     Int
   username String
   password String
+  country  String  @db.Char(2)
   active   Boolean @default(true)
   vendor   String
 

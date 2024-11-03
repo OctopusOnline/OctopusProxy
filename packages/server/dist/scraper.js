@@ -41,6 +41,7 @@ class OctopusProxyScraper {
                 if (newProxy) {
                     if (existingProxy.username !== newProxy.username ||
                         existingProxy.password !== newProxy.password ||
+                        existingProxy.country !== newProxy.country ||
                         !existingProxy.active) {
                         updateProxies.push({
                             where: {
@@ -53,6 +54,7 @@ class OctopusProxyScraper {
                             data: {
                                 username: newProxy.username,
                                 password: newProxy.password,
+                                country: newProxy.country,
                                 active: true
                             },
                         });

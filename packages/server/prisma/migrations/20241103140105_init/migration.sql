@@ -4,6 +4,7 @@ CREATE TABLE `Proxy` (
     `port` INTEGER NOT NULL,
     `username` VARCHAR(191) NOT NULL,
     `password` VARCHAR(191) NOT NULL,
+    `country` CHAR(2) NOT NULL,
     `active` BOOLEAN NOT NULL DEFAULT true,
     `vendor` VARCHAR(191) NOT NULL,
 
