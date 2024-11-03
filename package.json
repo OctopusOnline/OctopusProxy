@@ -7,13 +7,15 @@
     "packages/server",
     "packages/client"
   ],
-  "devDependencies": {
-    "lerna": "^8.1.5",
-    "typescript": "^5.5.3"
-  },
   "scripts": {
     "build": "lerna run build",
     "clean": "lerna run clean",
     "publish": "lerna publish"
+  },
+  "devDependencies": {
+    "@types/express": "<5.0.0",
+    "@types/node": "^22.8.6",
+    "typescript": "^5.6.3",
+    "lerna": "^8.1.9"
   }
 }

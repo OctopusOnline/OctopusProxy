@@ -1,3 +1,5 @@
+import { OctopusProxyScraper } from './scraper';
+export { OctopusProxyScraper };
 export declare class OctopusProxyServer {
     private app?;
     private readonly databaseUrl;

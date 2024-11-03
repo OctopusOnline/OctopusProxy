@@ -1,3 +1,6 @@
+import { OctopusProxyScraper } from './scraper';
+export { OctopusProxyScraper };
+
 import { INestApplication, Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import * as process from 'node:process';

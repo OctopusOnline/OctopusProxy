@@ -8,13 +8,18 @@ datasource db {
 }
 
 model Proxy {
-  ip String @id
+  ip       String
+  port     Int
+  username String
+  password String
+  active   Boolean @default(true)
+  vendor   String
+
+  @@id([ip, port])
 }
 
-model ProxyReservation {
-  ip         String
+model ProxyIpReservation {
+  ip         String @id
   serviceId  String
   instanceId String
-
-  @@id([ip, serviceId, instanceId])
 }
