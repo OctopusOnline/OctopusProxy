@@ -35,8 +35,6 @@ let server;
 if (stringToBoolean(process.env.SERVER)) {
 
   server = new OctopusProxyServer(process.env.DATABASE_URL);
-
-  await server.migrate();
   await server.start(stringToInt(process.env.SERVER_PORT));
 
   onExitSignal(async () => await server.stop());
