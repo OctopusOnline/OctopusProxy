@@ -12,7 +12,8 @@
   "scripts": {
     "build": "tsc",
     "watch": "tsc --watch",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "postinstall": "node ./scripts/prismaGenerate.mjs"
   },
   "dependencies": {
     "@nestjs/common": "^10.4.6",
