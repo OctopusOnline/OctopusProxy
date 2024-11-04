@@ -1,13 +1,13 @@
+import { prismaInit, prismaGenerate, prismaMigrate } from './prisma';
+export { prismaInit, prismaGenerate, prismaMigrate };
+
 import { OctopusProxyScraper } from './scraper';
 export { OctopusProxyScraper };
 
-import { INestApplication, Logger } from '@nestjs/common';
+import { INestApplication } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import * as process from 'node:process';
 import { AppModule } from './module/app.module';
-import { exec } from 'node:child_process';
-import { promisify } from 'node:util';
-import path from 'node:path';
 
 export class OctopusProxyServer {
   private app?: INestApplication;
@@ -15,14 +15,6 @@ export class OctopusProxyServer {
 
   constructor(databaseUrl: string) {
     this.databaseUrl = databaseUrl;
-  }
-
-  async migrate(): Promise<void> {
-    process.env.PRISMA_DATABASE_URL = this.databaseUrl;
-    await promisify(exec)(`
-      npx prisma migrate deploy --schema=${path.resolve(__dirname, '../prisma/schema.prisma')}
-    `);
-    Logger.log('Prisma migrations deployed', 'PrismaClient');
   }
 
   public async start(port: number = 8283): Promise<void> {

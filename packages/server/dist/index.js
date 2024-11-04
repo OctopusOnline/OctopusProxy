@@ -31,32 +31,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.OctopusProxyServer = exports.OctopusProxyScraper = void 0;
+exports.OctopusProxyServer = exports.OctopusProxyScraper = exports.prismaMigrate = exports.prismaGenerate = exports.prismaInit = void 0;
+const prisma_1 = require("./prisma");
+Object.defineProperty(exports, "prismaInit", { enumerable: true, get: function () { return prisma_1.prismaInit; } });
+Object.defineProperty(exports, "prismaGenerate", { enumerable: true, get: function () { return prisma_1.prismaGenerate; } });
+Object.defineProperty(exports, "prismaMigrate", { enumerable: true, get: function () { return prisma_1.prismaMigrate; } });
 const scraper_1 = require("./scraper");
 Object.defineProperty(exports, "OctopusProxyScraper", { enumerable: true, get: function () { return scraper_1.OctopusProxyScraper; } });
-const common_1 = require("@nestjs/common");
 const core_1 = require("@nestjs/core");
 const process = __importStar(require("node:process"));
 const app_module_1 = require("./module/app.module");
-const node_child_process_1 = require("node:child_process");
-const node_util_1 = require("node:util");
-const node_path_1 = __importDefault(require("node:path"));
 class OctopusProxyServer {
     constructor(databaseUrl) {
         this.databaseUrl = databaseUrl;
-    }
-    migrate() {
-        return __awaiter(this, void 0, void 0, function* () {
-            process.env.PRISMA_DATABASE_URL = this.databaseUrl;
-            yield (0, node_util_1.promisify)(node_child_process_1.exec)(`
-      npx prisma migrate deploy --schema=${node_path_1.default.resolve(__dirname, '../prisma/schema.prisma')}
-    `);
-            common_1.Logger.log('Prisma migrations deployed', 'PrismaClient');
-        });
     }
     start() {
         return __awaiter(this, arguments, void 0, function* (port = 8283) {
