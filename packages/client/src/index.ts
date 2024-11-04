@@ -1,8 +1,8 @@
 export class OctopusProxyClient {
 
-  private readonly protocol: string = 'http';
-  private readonly host: string;
-  private readonly port: number;
+  readonly protocol: string = 'http';
+  readonly host: string;
+  readonly port: number;
 
   private get baseUrl() {
     return `${this.protocol}://${this.host}:${this.port}/api`;
