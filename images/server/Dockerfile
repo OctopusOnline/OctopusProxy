@@ -11,7 +11,6 @@ COPY src/package*.json ./
 RUN npm ci --no-update-notifier
 
 COPY src/ ./
-RUN chmod +x ./entrypoint.sh \
- && node node_modules/@octopusproxy/server/scripts/prismaGenerate.js
+RUN chmod +x ./entrypoint.sh
 
 ENTRYPOINT ["./entrypoint.sh"]
