@@ -16,5 +16,6 @@
   },
   "dependencies": {
     "axios": "^1.7.7"
-  }
+  },
+  "gitHead": "e2ab0b67cfcc4c8edb5390d29ce3d84369feec0e"
 }

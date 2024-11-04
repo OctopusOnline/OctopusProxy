@@ -20,5 +20,6 @@
     "@nestjs/platform-express": "^10.4.6",
     "@prisma/client": "^5.21.1",
     "prisma": "^5.21.1"
-  }
+  },
+  "gitHead": "e2ab0b67cfcc4c8edb5390d29ce3d84369feec0e"
 }
