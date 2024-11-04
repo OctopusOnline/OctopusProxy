@@ -1,7 +1,7 @@
 export declare class OctopusProxyClient {
-    private readonly protocol;
-    private readonly host;
-    private readonly port;
+    readonly protocol: string;
+    readonly host: string;
+    readonly port: number;
     private get baseUrl();
     constructor(port?: number, host?: string);
     toProxyUrl(proxy: {
