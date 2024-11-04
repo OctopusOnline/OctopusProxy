@@ -4,8 +4,7 @@ import path from 'node:path';
 import process from 'node:process';
 import { promisify } from 'node:util';
 
-export async function prismaGenerate(databaseUrl: string): Promise<void> {
-  process.env.PRISMA_DATABASE_URL = databaseUrl;
+export async function prismaGenerate(): Promise<void> {
   await promisify(exec)(`
       npx prisma generate --schema=${path.resolve(__dirname, '../prisma/schema.prisma')}
     `);
@@ -18,11 +17,4 @@ export async function prismaMigrate(databaseUrl: string): Promise<void> {
       npx prisma migrate deploy --schema=${path.resolve(__dirname, '../prisma/schema.prisma')}
     `);
   Logger.log('Prisma migrations deployed', 'PrismaClient');
-}
-
-export async function prismaInit(databaseUrl: string): Promise<void> {
-  await Promise.all([
-    prismaMigrate(databaseUrl),
-    prismaGenerate(databaseUrl)
-  ]);
 }

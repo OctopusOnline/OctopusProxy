@@ -1,5 +1,5 @@
-import { prismaInit, prismaGenerate, prismaMigrate } from './prisma';
-export { prismaInit, prismaGenerate, prismaMigrate };
+import { prismaGenerate, prismaMigrate } from './prisma';
+export { prismaGenerate, prismaMigrate };
 
 import { OctopusProxyScraper } from './scraper';
 export { OctopusProxyScraper };

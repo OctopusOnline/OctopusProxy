@@ -1,4 +1,4 @@
-import { OctopusProxyServer, OctopusProxyScraper, prismaInit } from "@octopusproxy/server";
+import { OctopusProxyServer, OctopusProxyScraper, prismaMigrate } from "@octopusproxy/server";
 import { onExitSignal, stringToBoolean, stringToInt } from "./modules/helper/helper.js";
 import { Logger } from "@nestjs/common";
 
@@ -9,7 +9,7 @@ if (!process.env.DATABASE_URL) {
   process.exit(1);
 }
 
-await prismaInit(process.env.DATABASE_URL);
+await prismaMigrate(process.env.DATABASE_URL);
 
 
 

@@ -32,9 +32,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.OctopusProxyServer = exports.OctopusProxyScraper = exports.prismaMigrate = exports.prismaGenerate = exports.prismaInit = void 0;
+exports.OctopusProxyServer = exports.OctopusProxyScraper = exports.prismaMigrate = exports.prismaGenerate = void 0;
 const prisma_1 = require("./prisma");
-Object.defineProperty(exports, "prismaInit", { enumerable: true, get: function () { return prisma_1.prismaInit; } });
 Object.defineProperty(exports, "prismaGenerate", { enumerable: true, get: function () { return prisma_1.prismaGenerate; } });
 Object.defineProperty(exports, "prismaMigrate", { enumerable: true, get: function () { return prisma_1.prismaMigrate; } });
 const scraper_1 = require("./scraper");
