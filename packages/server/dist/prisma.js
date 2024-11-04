@@ -22,7 +22,7 @@ const node_util_1 = require("node:util");
 function prismaGenerate() {
     return __awaiter(this, void 0, void 0, function* () {
         yield (0, node_util_1.promisify)(node_child_process_1.exec)(`
-      prisma generate --schema=${node_path_1.default.resolve(__dirname, '../prisma/schema.prisma')}
+      prisma generate --schema=${node_path_1.default.resolve(__dirname, '../prisma/schema.prisma')} || npx prisma generate --schema=${node_path_1.default.resolve(__dirname, '../prisma/schema.prisma')}
     `);
         common_1.Logger.log('Prisma generated', 'PrismaClient');
     });
@@ -31,7 +31,7 @@ function prismaMigrate(databaseUrl) {
     return __awaiter(this, void 0, void 0, function* () {
         node_process_1.default.env.PRISMA_DATABASE_URL = databaseUrl;
         yield (0, node_util_1.promisify)(node_child_process_1.exec)(`
-      prisma migrate deploy --schema=${node_path_1.default.resolve(__dirname, '../prisma/schema.prisma')}
+      prisma migrate deploy --schema=${node_path_1.default.resolve(__dirname, '../prisma/schema.prisma')} || npx prisma migrate deploy --schema=${node_path_1.default.resolve(__dirname, '../prisma/schema.prisma')}
     `);
         common_1.Logger.log('Prisma migrations deployed', 'PrismaClient');
     });
