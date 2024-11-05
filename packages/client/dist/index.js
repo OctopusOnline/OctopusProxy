@@ -8,8 +8,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.OctopusProxyClient = void 0;
+const axios_1 = __importDefault(require("axios"));
 class OctopusProxyClient {
     get baseUrl() {
         return `${this.protocol}://${this.host}:${this.port}/api`;
@@ -32,10 +36,15 @@ class OctopusProxyClient {
             url.searchParams.append('reserve', reserve.toString());
             if (country)
                 url.searchParams.append('country', country);
-            const response = yield fetch(url.href, { method: 'GET' });
-            if (!response.ok)
-                throw new Error(`Error: ${response.statusText}`);
-            return (yield response.json()).proxy || undefined;
+            try {
+                const response = yield axios_1.default.get(url.href);
+                if (response.status !== 200)
+                    throw new Error(`Error: ${response.statusText}`);
+                return response.data.proxy || undefined;
+            }
+            catch (error) {
+                throw new Error(`Error: ${error.response ? error.response.statusText : error.message}`);
+            }
         });
     }
 }

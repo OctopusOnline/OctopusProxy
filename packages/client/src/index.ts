@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 export class OctopusProxyClient {
 
   readonly protocol: string = 'http';
@@ -39,11 +41,15 @@ export class OctopusProxyClient {
     url.searchParams.append('reserve', reserve.toString());
     if (country) url.searchParams.append('country', country);
 
-    const response = await fetch(url.href, { method: 'GET' });
+    try {
+      const response = await axios.get(url.href);
+      if (response.status !== 200)
+        throw new Error(`Error: ${response.statusText}`);
 
-    if (!response.ok)
-      throw new Error(`Error: ${response.statusText}`);
-
-    return (await response.json()).proxy || undefined;
+      return response.data.proxy || undefined;
+    }
+    catch (error) {
+      throw new Error(`Error: ${error.response ? error.response.statusText : error.message}`);
+    }
   }
 }
