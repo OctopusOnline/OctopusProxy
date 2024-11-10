@@ -15,6 +15,6 @@ services:
         aliases:
           - octopusproxy-server
       db_default:
-    expose:
-      - "8283"
+    ports:
+      - "8283:8283"
     restart: always
