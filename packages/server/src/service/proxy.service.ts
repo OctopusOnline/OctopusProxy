@@ -23,7 +23,7 @@ export class ProxyService {
     country?: string,
     reserve: boolean = true
   ): Promise<Proxy | undefined> {
-    let proxy: Proxy = undefined;
+    let proxy: Proxy | undefined;
 
     const proxyReservations = await this.getProxyIpReservations();
     const ownProxyReservations = proxyReservations.filter(proxyReservation =>
@@ -42,22 +42,30 @@ export class ProxyService {
     }
 
     if (!proxy) {
-      const proxyWhere: { active: true; country?: string; NOT?: { ip: { in: string[] } } } = { active: true };
-      if (country)
-        proxyWhere.country = country;
-      if (proxyReservations)
-        proxyWhere.NOT = { ip: { in: proxyReservations.map(proxyReservation => proxyReservation.ip) } };
+      proxy = await this.prisma.$transaction(async prisma => {
+        const proxyReservations = await prisma.proxyIpReservation.findMany();
+        const proxyWhere: { active: true; country?: string; NOT?: { ip: { in: string[] } } } = { active: true };
 
-      proxy = await this.prisma.proxy.findFirst({ where: proxyWhere });
+        if (country)
+          proxyWhere.country = country;
 
-      if (reserve && proxy)
-        await this.prisma.proxyIpReservation.create({
-          data: {
-            ip: proxy.ip,
-            serviceId,
-            instanceId,
-          }
-        });
+        if (proxyReservations.length > 0)
+          proxyWhere.NOT = { ip: { in: proxyReservations.map(proxyReservation => proxyReservation.ip) } };
+
+        const selectedProxy = await prisma.proxy.findFirst({ where: proxyWhere });
+        if (!selectedProxy) return undefined;
+
+        if (reserve)
+          await prisma.proxyIpReservation.create({
+            data: {
+              ip: selectedProxy.ip,
+              serviceId,
+              instanceId,
+            }
+          });
+
+        return selectedProxy;
+      });
     }
 
     return proxy;

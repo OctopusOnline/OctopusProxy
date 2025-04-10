@@ -35,7 +35,7 @@ let ProxyService = class ProxyService {
     }
     getProxy(serviceId_1, instanceId_1, country_1) {
         return __awaiter(this, arguments, void 0, function* (serviceId, instanceId, country, reserve = true) {
-            let proxy = undefined;
+            let proxy;
             const proxyReservations = yield this.getProxyIpReservations();
             const ownProxyReservations = proxyReservations.filter(proxyReservation => proxyReservation.serviceId === serviceId &&
                 proxyReservation.instanceId === instanceId);
@@ -49,20 +49,26 @@ let ProxyService = class ProxyService {
                 proxy = yield this.prisma.proxy.findFirst({ where: proxyWhere });
             }
             if (!proxy) {
-                const proxyWhere = { active: true };
-                if (country)
-                    proxyWhere.country = country;
-                if (proxyReservations)
-                    proxyWhere.NOT = { ip: { in: proxyReservations.map(proxyReservation => proxyReservation.ip) } };
-                proxy = yield this.prisma.proxy.findFirst({ where: proxyWhere });
-                if (reserve && proxy)
-                    yield this.prisma.proxyIpReservation.create({
-                        data: {
-                            ip: proxy.ip,
-                            serviceId,
-                            instanceId,
-                        }
-                    });
+                proxy = yield this.prisma.$transaction((prisma) => __awaiter(this, void 0, void 0, function* () {
+                    const proxyReservations = yield prisma.proxyIpReservation.findMany();
+                    const proxyWhere = { active: true };
+                    if (country)
+                        proxyWhere.country = country;
+                    if (proxyReservations.length > 0)
+                        proxyWhere.NOT = { ip: { in: proxyReservations.map(proxyReservation => proxyReservation.ip) } };
+                    const selectedProxy = yield prisma.proxy.findFirst({ where: proxyWhere });
+                    if (!selectedProxy)
+                        return undefined;
+                    if (reserve)
+                        yield prisma.proxyIpReservation.create({
+                            data: {
+                                ip: selectedProxy.ip,
+                                serviceId,
+                                instanceId,
+                            }
+                        });
+                    return selectedProxy;
+                }));
             }
             return proxy;
         });
