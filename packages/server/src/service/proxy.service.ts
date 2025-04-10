@@ -55,14 +55,22 @@ export class ProxyService {
         const selectedProxy = await prisma.proxy.findFirst({ where: proxyWhere });
         if (!selectedProxy) return undefined;
 
-        if (reserve)
+        if (reserve) {
+          const existingReservation = await prisma.proxyIpReservation.findUnique({
+            where: { ip: selectedProxy.ip }
+          });
+
+          if (existingReservation)
+            throw new Error(`double reservation for ${selectedProxy.ip}`);
+
           await prisma.proxyIpReservation.create({
             data: {
               ip: selectedProxy.ip,
               serviceId,
               instanceId,
-            }
+            },
           });
+        }
 
         return selectedProxy;
       });
