@@ -1,18 +1,20 @@
 import axios from 'axios';
+import { OctopusProxyServerConstructorParamInterface, OctopusProxyServerInterface } from './interface';
 
 export class OctopusProxyClient {
 
-  readonly protocol: string = 'http';
-  readonly host: string;
-  readonly port: number;
+  readonly server: OctopusProxyServerInterface;
 
   private get baseUrl() {
-    return `${this.protocol}://${this.host}:${this.port}/api`;
+    return `${this.server.protocol}://${this.server.host}:${this.server.port}/api`;
   }
 
-  constructor(port: number = 8283, host: string = '0.0.0.0') {
-    this.port = port;
-    this.host = host;
+  constructor(server: OctopusProxyServerConstructorParamInterface) {
+    this.server = {
+      protocol: server.protocol ?? 'http',
+      host: server.host ?? '0.0.0.0',
+      port: server.port ?? 8283
+    }
   }
 
   toProxyUrl(proxy: { ip: string; port: number; username: string; password: string }): string | undefined {
