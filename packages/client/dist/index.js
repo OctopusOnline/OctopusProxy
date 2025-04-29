@@ -16,23 +16,27 @@ exports.OctopusProxyClient = void 0;
 const axios_1 = __importDefault(require("axios"));
 class OctopusProxyClient {
     get baseUrl() {
-        return `${this.protocol}://${this.host}:${this.port}/api`;
+        return `${this.server.protocol}://${this.server.host}:${this.server.port}/api`;
     }
-    constructor(port = 8283, host = '0.0.0.0') {
-        this.protocol = 'http';
-        this.port = port;
-        this.host = host;
+    constructor(instance, server) {
+        var _a, _b, _c;
+        this.instance = instance;
+        this.server = {
+            protocol: (_a = server.protocol) !== null && _a !== void 0 ? _a : 'http',
+            host: (_b = server.host) !== null && _b !== void 0 ? _b : '0.0.0.0',
+            port: (_c = server.port) !== null && _c !== void 0 ? _c : 8283
+        };
     }
     toProxyUrl(proxy) {
         return proxy
             ? `http://${proxy.username}:${proxy.password}@${proxy.ip}:${proxy.port}`
             : undefined;
     }
-    getProxy(serviceId_1, instanceId_1, country_1) {
-        return __awaiter(this, arguments, void 0, function* (serviceId, instanceId, country, reserve = true) {
+    getProxy(country_1) {
+        return __awaiter(this, arguments, void 0, function* (country, reserve = true) {
             const url = new URL(`${this.baseUrl}/proxy`);
-            url.searchParams.append('serviceId', serviceId);
-            url.searchParams.append('instanceId', instanceId);
+            url.searchParams.append('serviceId', this.instance.serviceName);
+            url.searchParams.append('instanceId', this.instance.id.toString());
             url.searchParams.append('reserve', reserve.toString());
             if (country)
                 url.searchParams.append('country', country);
