@@ -1,15 +1,18 @@
-import axios from 'axios';
 import { OctopusProxyServerConstructorParamInterface, OctopusProxyServerInterface } from './interface';
+import { Instance } from '@octopuscentral/instance';
+import axios from 'axios';
 
 export class OctopusProxyClient {
 
+  readonly instance: Instance;
   readonly server: OctopusProxyServerInterface;
 
   private get baseUrl() {
     return `${this.server.protocol}://${this.server.host}:${this.server.port}/api`;
   }
 
-  constructor(server: OctopusProxyServerConstructorParamInterface) {
+  constructor(instance: Instance, server: OctopusProxyServerConstructorParamInterface) {
+    this.instance = instance;
     this.server = {
       protocol: server.protocol ?? 'http',
       host: server.host ?? '0.0.0.0',
@@ -24,8 +27,6 @@ export class OctopusProxyClient {
   }
 
   async getProxy(
-    serviceId: string,
-    instanceId: string,
     country?: string,
     reserve: boolean = true,
   ): Promise<{
@@ -38,8 +39,8 @@ export class OctopusProxyClient {
     active: boolean;
   } | undefined> {
     const url = new URL(`${this.baseUrl}/proxy`);
-    url.searchParams.append('serviceId', serviceId);
-    url.searchParams.append('instanceId', instanceId);
+    url.searchParams.append('serviceId', this.instance.serviceName);
+    url.searchParams.append('instanceId', this.instance.id.toString());
     url.searchParams.append('reserve', reserve.toString());
     if (country) url.searchParams.append('country', country);
 
