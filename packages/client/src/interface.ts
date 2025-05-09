@@ -1,3 +1,8 @@
+export interface VersionInterface {
+  major: number;
+  minor: number;
+}
+
 export type OctopusProxyServerProtocol = 'http';
 export type OctopusProxyServerHost = string;
 export type OctopusProxyServerPort = number;

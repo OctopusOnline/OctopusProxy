@@ -48,9 +48,11 @@ Object.defineProperty(exports, "prismaGenerate", { enumerable: true, get: functi
 Object.defineProperty(exports, "prismaMigrate", { enumerable: true, get: function () { return prisma_1.prismaMigrate; } });
 const scraper_1 = require("./scraper");
 Object.defineProperty(exports, "OctopusProxyScraper", { enumerable: true, get: function () { return scraper_1.OctopusProxyScraper; } });
+const common_1 = require("@nestjs/common");
 const core_1 = require("@nestjs/core");
 const process = __importStar(require("node:process"));
 const app_module_1 = require("./module/app.module");
+const version_service_1 = require("./service/version.service");
 class OctopusProxyServer {
     constructor(databaseUrl) {
         this.databaseUrl = databaseUrl;
@@ -61,6 +63,8 @@ class OctopusProxyServer {
             if (this.app)
                 return;
             this.app = yield core_1.NestFactory.create(app_module_1.AppModule);
+            const version = this.getVersion();
+            common_1.Logger.log(`Server Version: ${version.major}.${version.minor}`, 'Bootstrap');
             this.app.setGlobalPrefix('api');
             yield this.app.listen(port);
         });
@@ -71,6 +75,9 @@ class OctopusProxyServer {
             yield ((_a = this.app) === null || _a === void 0 ? void 0 : _a.close());
             this.app = undefined;
         });
+    }
+    getVersion() {
+        return this.app.get(version_service_1.VersionService).getVersion();
     }
 }
 exports.OctopusProxyServer = OctopusProxyServer;
