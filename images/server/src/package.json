@@ -1,6 +1,6 @@
 {
   "type": "module",
   "dependencies": {
-    "@octopusproxy/server": "^1.10.0"
+    "@octopusproxy/server": "^1.11.0"
   }
 }
