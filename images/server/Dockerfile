@@ -12,13 +12,14 @@ RUN apt update \
  && apt install -y openssl
 
 USER node
-
 COPY src/package*.json ./
 RUN npm ci --no-update-notifier
 
 COPY src/ ./
+USER root
 RUN chmod +x ./entrypoint.sh
 
 EXPOSE 8283
 
+USER node
 ENTRYPOINT ["./entrypoint.sh"]
