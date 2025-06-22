@@ -7,6 +7,12 @@ ENV DEBUG=false \
     SERVER=true \
     SERVER_PORT=8283
 
+USER root
+RUN apt update \
+ && apt install -y openssl
+
+USER node
+
 COPY src/package*.json ./
 RUN npm ci --no-update-notifier
 
