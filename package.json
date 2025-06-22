@@ -8,9 +8,9 @@
     "packages/client"
   ],
   "scripts": {
-    "build": "lerna run build",
-    "clean": "lerna run clean",
-    "publish": "lerna publish"
+    "packages:build": "lerna run build",
+    "packages:publish": "lerna publish",
+    "image:server:build": "cd images/server && ./build.sh"
   },
   "devDependencies": {
     "@types/express": "<5.0.0",
