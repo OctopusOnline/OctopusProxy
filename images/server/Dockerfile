@@ -13,4 +13,6 @@ RUN npm ci --no-update-notifier
 COPY src/ ./
 RUN chmod +x ./entrypoint.sh
 
+EXPOSE 8283
+
 ENTRYPOINT ["./entrypoint.sh"]
