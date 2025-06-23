@@ -15,7 +15,7 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@octopuscentral/instance": ">=1.11.0",
+    "@octopuscentral/instance": ">=1.12.0",
     "axios": "^1.9.0"
   },
   "gitHead": "e2ab0b67cfcc4c8edb5390d29ce3d84369feec0e"
