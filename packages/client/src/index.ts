@@ -48,6 +48,7 @@ export class OctopusProxyClient {
   }
 
   async getProxy(
+    instanceIdentifier: string,
     country?: string,
     reserve: boolean = true,
   ): Promise<{
@@ -59,11 +60,14 @@ export class OctopusProxyClient {
     country: string;
     active: boolean;
   } | undefined> {
+    if (!instanceIdentifier)
+      throw new Error('no instance identifier given!');
+
     await this.matchServerVersion();
 
     const url = new URL(`${this.baseUrl}/proxy`);
     url.searchParams.append('serviceId', this.instance.serviceName);
-    url.searchParams.append('instanceId', this.instance.id.toString());
+    url.searchParams.append('instanceId', instanceIdentifier);
     url.searchParams.append('reserve', reserve.toString());
     if (country) url.searchParams.append('country', country);
 

@@ -9,7 +9,7 @@ export declare class OctopusProxyClient {
     getClientVersion(): VersionInterface;
     getServerVersion(): Promise<VersionInterface>;
     private matchServerVersion;
-    getProxy(country?: string, reserve?: boolean): Promise<{
+    getProxy(instanceIdentifier: string, country?: string, reserve?: boolean): Promise<{
         id: string;
         ip: string;
         port: number;

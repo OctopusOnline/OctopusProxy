@@ -50,12 +50,14 @@ class OctopusProxyClient {
                 throw new Error(`Server version mismatch:  [server] ${serverVersion.major}.${serverVersion.minor}  !=  ${this.version.major}.${this.version.minor} [client]`);
         });
     }
-    getProxy(country_1) {
-        return __awaiter(this, arguments, void 0, function* (country, reserve = true) {
+    getProxy(instanceIdentifier_1, country_1) {
+        return __awaiter(this, arguments, void 0, function* (instanceIdentifier, country, reserve = true) {
+            if (!instanceIdentifier)
+                throw new Error('no instance identifier given!');
             yield this.matchServerVersion();
             const url = new URL(`${this.baseUrl}/proxy`);
             url.searchParams.append('serviceId', this.instance.serviceName);
-            url.searchParams.append('instanceId', this.instance.id.toString());
+            url.searchParams.append('instanceId', instanceIdentifier);
             url.searchParams.append('reserve', reserve.toString());
             if (country)
                 url.searchParams.append('country', country);

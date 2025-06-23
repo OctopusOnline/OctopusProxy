@@ -1,6 +1,6 @@
 {
   "name": "@octopusproxy/server",
-  "version": "1.12.0",
+  "version": "1.15.0",
   "description": "",
   "author": "official5ETa",
   "license": "Apache-2.0 license",
@@ -16,11 +16,11 @@
     "postinstall": "node ./scripts/prismaGenerate.mjs"
   },
   "dependencies": {
-    "@nestjs/common": "^11.1.0",
-    "@nestjs/core": "^11.1.0",
-    "@nestjs/platform-express": "^11.1.0",
-    "@prisma/client": "^6.7.0",
-    "prisma": "^6.7.0"
+    "@nestjs/common": "^11.1.3",
+    "@nestjs/core": "^11.1.3",
+    "@nestjs/platform-express": "^11.1.3",
+    "@prisma/client": "^6.10.1",
+    "prisma": "^6.10.1"
   },
   "gitHead": "e2ab0b67cfcc4c8edb5390d29ce3d84369feec0e"
 }
