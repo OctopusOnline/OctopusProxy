@@ -6,18 +6,18 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AppModule = void 0;
+exports.SyncModule = void 0;
 const common_1 = require("@nestjs/common");
-const prisma_module_1 = require("./prisma.module");
-const proxy_module_1 = require("./proxy.module");
-const sync_module_1 = require("./sync.module");
-const version_module_1 = require("./version.module");
-let AppModule = class AppModule {
+const sync_controller_1 = require("../controller/sync.controller");
+const sync_service_1 = require("../service/sync.service");
+const prisma_service_1 = require("../service/prisma.service");
+let SyncModule = class SyncModule {
 };
-exports.AppModule = AppModule;
-exports.AppModule = AppModule = __decorate([
+exports.SyncModule = SyncModule;
+exports.SyncModule = SyncModule = __decorate([
     (0, common_1.Module)({
-        imports: [prisma_module_1.PrismaModule, proxy_module_1.ProxyModule, sync_module_1.SyncModule, version_module_1.VersionModule],
+        controllers: [sync_controller_1.SyncController],
+        providers: [sync_service_1.SyncService, prisma_service_1.PrismaService],
     })
-], AppModule);
-//# sourceMappingURL=app.module.js.map
+], SyncModule);
+//# sourceMappingURL=sync.module.js.map
