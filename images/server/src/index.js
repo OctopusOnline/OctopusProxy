@@ -1,5 +1,5 @@
 import { OctopusProxyServer, OctopusProxyScraper, prismaMigrate } from "@octopusproxy/server";
-import { onExitSignal, stringToBoolean, stringToInt } from "./modules/helper/helper.js";
+import { onExitSignal, stringToBoolean, stringToInt } from "./utils.js";
 import { Logger } from "@nestjs/common";
 
 
