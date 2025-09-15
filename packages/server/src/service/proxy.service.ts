@@ -25,9 +25,8 @@ export class ProxyService {
   ): Promise<Proxy | undefined> {
     let proxy: Proxy | undefined;
 
-    const proxyReservations = await this.getProxyIpReservations();
+    const proxyReservations = await this.getProxyIpReservations(serviceId);
     const ownProxyReservations = proxyReservations.filter(proxyReservation =>
-      proxyReservation.serviceId === serviceId &&
       proxyReservation.instanceId === instanceId
     );
 
@@ -43,7 +42,8 @@ export class ProxyService {
 
     if (!proxy) {
       proxy = await this.prisma.$transaction(async prisma => {
-        const proxyReservations = await prisma.proxyIpReservation.findMany();
+        const proxyReservations = await prisma.proxyIpReservation.findMany({ where: { serviceId } });
+
         const proxyWhere: { active: true; country?: string; NOT?: { ip: { in: string[] } } } = { active: true };
 
         if (country)
@@ -56,15 +56,17 @@ export class ProxyService {
         if (!selectedProxy) return undefined;
 
         if (reserve) {
-          const existingReservation = await prisma.proxyIpReservation.findUnique({
-            where: { ip: selectedProxy.ip }
-          });
-
-          if (existingReservation)
-            throw new Error(`double reservation for ${selectedProxy.ip}`);
-
-          await prisma.proxyIpReservation.create({
-            data: {
+          await prisma.proxyIpReservation.upsert({
+            where: {
+              ip_serviceId: {
+                ip: selectedProxy.ip,
+                serviceId,
+              }
+            },
+            update: {
+              instanceId,
+            },
+            create: {
               ip: selectedProxy.ip,
               serviceId,
               instanceId,

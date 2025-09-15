@@ -20,7 +20,9 @@ model Proxy {
 }
 
 model ProxyIpReservation {
-  ip         String @id
+  ip         String
   serviceId  String
   instanceId String
+
+  @@id([ip, serviceId])
 }

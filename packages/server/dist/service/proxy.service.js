@@ -36,9 +36,8 @@ let ProxyService = class ProxyService {
     getProxy(serviceId_1, instanceId_1, country_1) {
         return __awaiter(this, arguments, void 0, function* (serviceId, instanceId, country, reserve = true) {
             let proxy;
-            const proxyReservations = yield this.getProxyIpReservations();
-            const ownProxyReservations = proxyReservations.filter(proxyReservation => proxyReservation.serviceId === serviceId &&
-                proxyReservation.instanceId === instanceId);
+            const proxyReservations = yield this.getProxyIpReservations(serviceId);
+            const ownProxyReservations = proxyReservations.filter(proxyReservation => proxyReservation.instanceId === instanceId);
             if (ownProxyReservations.length > 0) {
                 const proxyWhere = {
                     active: true,
@@ -50,7 +49,7 @@ let ProxyService = class ProxyService {
             }
             if (!proxy) {
                 proxy = yield this.prisma.$transaction((prisma) => __awaiter(this, void 0, void 0, function* () {
-                    const proxyReservations = yield prisma.proxyIpReservation.findMany();
+                    const proxyReservations = yield prisma.proxyIpReservation.findMany({ where: { serviceId } });
                     const proxyWhere = { active: true };
                     if (country)
                         proxyWhere.country = country;
@@ -60,13 +59,17 @@ let ProxyService = class ProxyService {
                     if (!selectedProxy)
                         return undefined;
                     if (reserve) {
-                        const existingReservation = yield prisma.proxyIpReservation.findUnique({
-                            where: { ip: selectedProxy.ip }
-                        });
-                        if (existingReservation)
-                            throw new Error(`double reservation for ${selectedProxy.ip}`);
-                        yield prisma.proxyIpReservation.create({
-                            data: {
+                        yield prisma.proxyIpReservation.upsert({
+                            where: {
+                                ip_serviceId: {
+                                    ip: selectedProxy.ip,
+                                    serviceId,
+                                }
+                            },
+                            update: {
+                                instanceId,
+                            },
+                            create: {
                                 ip: selectedProxy.ip,
                                 serviceId,
                                 instanceId,
