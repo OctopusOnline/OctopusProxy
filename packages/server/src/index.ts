@@ -1,8 +1,5 @@
-import { prismaGenerate, prismaMigrate } from './prisma';
-export { prismaGenerate, prismaMigrate };
-
-import { OctopusProxyScraper } from './scraper';
-export { OctopusProxyScraper };
+export { prismaGenerate, prismaMigrate } from './prisma';
+export { OctopusProxyScraper } from './scraper';
 
 import { INestApplication, Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
