@@ -16,23 +16,37 @@ exports.prismaGenerate = prismaGenerate;
 exports.prismaMigrate = prismaMigrate;
 const common_1 = require("@nestjs/common");
 const node_child_process_1 = require("node:child_process");
-const node_path_1 = __importDefault(require("node:path"));
+const node_path_1 = require("node:path");
 const node_process_1 = __importDefault(require("node:process"));
+const node_url_1 = require("node:url");
 const node_util_1 = require("node:util");
 function prismaGenerate() {
     return __awaiter(this, void 0, void 0, function* () {
-        yield (0, node_util_1.promisify)(node_child_process_1.exec)(`
-      prisma generate --schema=${node_path_1.default.resolve(__dirname, '../prisma/schema.prisma')} || npx prisma generate --schema=${node_path_1.default.resolve(__dirname, '../prisma/schema.prisma')}
-    `);
+        const schemaPath = (0, node_path_1.resolve)(__dirname, '../prisma/schema.prisma');
+        try {
+            yield (0, node_util_1.promisify)(node_child_process_1.exec)(`prisma generate --schema=${schemaPath}`);
+        }
+        catch (error) {
+            common_1.Logger.warn('Prisma command failed, trying with npx...', 'PrismaClient');
+            yield (0, node_util_1.promisify)(node_child_process_1.exec)(`npx prisma generate --schema=${schemaPath}`);
+        }
         common_1.Logger.log('Prisma generated', 'PrismaClient');
     });
 }
 function prismaMigrate(databaseUrl) {
     return __awaiter(this, void 0, void 0, function* () {
-        node_process_1.default.env.PRISMA_DATABASE_URL = databaseUrl;
-        yield (0, node_util_1.promisify)(node_child_process_1.exec)(`
-      prisma migrate deploy --schema=${node_path_1.default.resolve(__dirname, '../prisma/schema.prisma')} || npx prisma migrate deploy --schema=${node_path_1.default.resolve(__dirname, '../prisma/schema.prisma')}
-    `);
+        const url = new node_url_1.URL(databaseUrl);
+        if (url.protocol === 'mariadb:')
+            url.protocol = 'mysql:';
+        node_process_1.default.env.PRISMA_DATABASE_URL = url.toString();
+        const schemaPath = (0, node_path_1.resolve)(__dirname, '../prisma/schema.prisma');
+        try {
+            yield (0, node_util_1.promisify)(node_child_process_1.exec)(`prisma migrate deploy --schema=${schemaPath}`);
+        }
+        catch (error) {
+            common_1.Logger.warn('Prisma migrate command failed, trying with npx...', 'PrismaClient');
+            yield (0, node_util_1.promisify)(node_child_process_1.exec)(`npx prisma migrate deploy --schema=${schemaPath}`);
+        }
         common_1.Logger.log('Prisma migrations deployed', 'PrismaClient');
     });
 }
