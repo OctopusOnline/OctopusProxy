@@ -11,8 +11,8 @@ export class OctopusProxyScraper {
   private readonly prisma: PrismaClient;
   private readonly scraper: ScraperInterface[];
 
-  constructor(databaseUrl: string, scraper: ScraperInterface[]) {
-    this.prisma = new PrismaClient({ datasources: { db: { url: databaseUrl } } });
+  constructor(scraper: ScraperInterface[]) {
+    this.prisma = new PrismaClient();
     this.scraper = scraper;
   }
 

@@ -14,8 +14,8 @@ const common_1 = require("@nestjs/common");
 const client_1 = require("@prisma/client");
 const WebshareScraper_1 = require("./scraper/WebshareScraper");
 class OctopusProxyScraper {
-    constructor(databaseUrl, scraper) {
-        this.prisma = new client_1.PrismaClient({ datasources: { db: { url: databaseUrl } } });
+    constructor(scraper) {
+        this.prisma = new client_1.PrismaClient();
         this.scraper = scraper;
     }
     connect() {

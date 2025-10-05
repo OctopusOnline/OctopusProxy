@@ -6,7 +6,7 @@ export declare class OctopusProxyScraper {
     };
     private readonly prisma;
     private readonly scraper;
-    constructor(databaseUrl: string, scraper: ScraperInterface[]);
+    constructor(scraper: ScraperInterface[]);
     connect(): Promise<void>;
     private syncProxies;
     startScrapeLoop(interval?: number): Promise<void>;

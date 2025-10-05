@@ -2,7 +2,6 @@ export { OctopusProxyScraper } from './scraper';
 
 import { INestApplication, Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import * as process from 'node:process';
 import { AppModule } from './module/app.module';
 
 import { VersionService } from './service/version.service';
@@ -10,12 +9,6 @@ import { VersionInterface } from './interface/version.interface';
 
 export class OctopusProxyServer {
   private app?: INestApplication;
-  private readonly databaseUrl: string;
-
-  constructor(databaseUrl: string) {
-    this.databaseUrl = databaseUrl;
-    process.env.PRISMA_DATABASE_URL = this.databaseUrl;
-  }
 
   public async start(port: number = 8283): Promise<void> {
     if (this.app) return;

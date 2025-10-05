@@ -19,7 +19,7 @@ if (stringToBoolean(process.env.SCRAPER)) {
   ];
 
   if (scrapers.length > 0) {
-    scraper = new OctopusProxyScraper(process.env.DATABASE_URL, scrapers);
+    scraper = new OctopusProxyScraper(scrapers);
     await scraper.startScrapeLoop();
 
     Logger.log('Scraper started', 'Bootstrap');
@@ -32,7 +32,7 @@ if (stringToBoolean(process.env.SCRAPER)) {
 let server;
 if (stringToBoolean(process.env.SERVER)) {
 
-  server = new OctopusProxyServer(process.env.DATABASE_URL);
+  server = new OctopusProxyServer();
   await server.start(stringToInt(process.env.SERVER_PORT));
 
   onExitSignal(async () => await server.stop());
