@@ -17,8 +17,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PrismaService = void 0;
 const common_1 = require("@nestjs/common");
-const client_1 = require("@prisma/client");
-let PrismaService = class PrismaService extends client_1.PrismaClient {
+const prisma_client_1 = require("../../generated/prisma-client");
+let PrismaService = class PrismaService extends prisma_client_1.PrismaClient {
     onModuleInit() {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.$connect();
