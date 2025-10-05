@@ -1,4 +1,3 @@
-export { prismaGenerate, prismaMigrate } from './prisma';
 export { OctopusProxyScraper } from './scraper';
 import { VersionInterface } from './interface/version.interface';
 export declare class OctopusProxyServer {

@@ -1,4 +1,3 @@
-export { prismaGenerate, prismaMigrate } from './prisma';
 export { OctopusProxyScraper } from './scraper';
 
 import { INestApplication, Logger } from '@nestjs/common';
@@ -15,11 +14,10 @@ export class OctopusProxyServer {
 
   constructor(databaseUrl: string) {
     this.databaseUrl = databaseUrl;
+    process.env.PRISMA_DATABASE_URL = this.databaseUrl;
   }
 
   public async start(port: number = 8283): Promise<void> {
-    process.env.PRISMA_DATABASE_URL = this.databaseUrl;
-
     if (this.app) return;
     this.app = await NestFactory.create(AppModule);
 

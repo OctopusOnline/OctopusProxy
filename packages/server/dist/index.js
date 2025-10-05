@@ -42,10 +42,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.OctopusProxyServer = exports.OctopusProxyScraper = exports.prismaMigrate = exports.prismaGenerate = void 0;
-var prisma_1 = require("./prisma");
-Object.defineProperty(exports, "prismaGenerate", { enumerable: true, get: function () { return prisma_1.prismaGenerate; } });
-Object.defineProperty(exports, "prismaMigrate", { enumerable: true, get: function () { return prisma_1.prismaMigrate; } });
+exports.OctopusProxyServer = exports.OctopusProxyScraper = void 0;
 var scraper_1 = require("./scraper");
 Object.defineProperty(exports, "OctopusProxyScraper", { enumerable: true, get: function () { return scraper_1.OctopusProxyScraper; } });
 const common_1 = require("@nestjs/common");
@@ -56,10 +53,10 @@ const version_service_1 = require("./service/version.service");
 class OctopusProxyServer {
     constructor(databaseUrl) {
         this.databaseUrl = databaseUrl;
+        process.env.PRISMA_DATABASE_URL = this.databaseUrl;
     }
     start() {
         return __awaiter(this, arguments, void 0, function* (port = 8283) {
-            process.env.PRISMA_DATABASE_URL = this.databaseUrl;
             if (this.app)
                 return;
             this.app = yield core_1.NestFactory.create(app_module_1.AppModule);
