@@ -1,6 +1,6 @@
 {
   "name": "@octopusproxy/server",
-  "version": "1.15.1",
+  "version": "1.15.2",
   "description": "",
   "author": "official5ETa",
   "license": "Apache-2.0 license",
@@ -13,10 +13,8 @@
     "build": "tsc",
     "watch": "tsc --watch",
     "clean": "rm -rf dist",
-
     "postinstall": "npm run scripts:prisma-generate || exit 0",
     "prebuild": "npm run scripts:prisma-generate || exit 0",
-
     "scripts:prisma-generate": "./scripts/prisma-generate.mjs",
     "scripts:prisma-migrate": "./scripts/prisma-migrate.mjs"
   },
