@@ -1,4 +1,4 @@
-import { OctopusProxyServer, OctopusProxyScraper, prismaMigrate } from "@octopusproxy/server";
+import { OctopusProxyServer, OctopusProxyScraper } from "@octopusproxy/server";
 import { onExitSignal, stringToBoolean, stringToInt } from "./utils.js";
 import { Logger } from "@nestjs/common";
 
@@ -8,8 +8,6 @@ if (!process.env.DATABASE_URL) {
   Logger.error('DATABASE_URL is not set', 'Bootstrap');
   process.exit(1);
 }
-
-await prismaMigrate(process.env.DATABASE_URL);
 
 
 
