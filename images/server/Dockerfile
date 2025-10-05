@@ -15,7 +15,7 @@ USER node
 COPY lerna.json package.json package-lock.json ./
 COPY packages/server ./packages/server
 COPY images/server/src/package*.json ./
-RUN npm ci --no-update-notifier
+RUN npm i --no-update-notifier
 
 COPY images/server/src/ ./
 USER root
