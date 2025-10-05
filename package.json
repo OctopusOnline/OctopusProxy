@@ -8,14 +8,21 @@
     "packages/client"
   ],
   "scripts": {
-    "packages:build": "lerna run build",
-    "packages:publish": "lerna publish",
-    "image:server:build": "cd images/server && ./build.sh"
+    "lerna:build": "lerna run build",
+    "lerna:clean": "lerna run clean",
+    "lerna:publish": "lerna publish",
+
+    "prelerna:publish": "npm run lerna:build",
+    "postlerna:publish": "npm run scripts:update-image-package-versions-and-push",
+
+    "scripts:build-all-images": "scripts/build-all-images.sh",
+    "scripts:pull-and-build-all-images": "scripts/pull-and-build-all-images.sh",
+    "scripts:update-image-package-versions-and-push": "scripts/update-image-package-versions-and-push.mjs"
   },
   "devDependencies": {
     "@types/express": "<5.0.0",
     "@types/node": "20.14.8",
-    "typescript": "^5.8.3",
-    "lerna": "^8.2.2"
+    "typescript": "^5.9.3",
+    "lerna": "^9.0.0"
   }
 }
