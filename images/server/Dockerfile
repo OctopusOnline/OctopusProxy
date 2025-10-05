@@ -12,10 +12,12 @@ RUN apt update \
  && apt install -y openssl
 
 USER node
-COPY src/package*.json ./
+COPY lerna.json package.json package-lock.json ./
+COPY packages/server ./packages/server
+COPY images/server/src/package*.json ./
 RUN npm ci --no-update-notifier
 
-COPY src/ ./
+COPY images/server/src/ ./
 USER root
 RUN chmod +x ./entrypoint.sh
 
