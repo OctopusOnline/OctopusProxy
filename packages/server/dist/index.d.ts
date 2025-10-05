@@ -1,7 +1,5 @@
-import { prismaGenerate, prismaMigrate } from './prisma';
-export { prismaGenerate, prismaMigrate };
-import { OctopusProxyScraper } from './scraper';
-export { OctopusProxyScraper };
+export { prismaGenerate, prismaMigrate } from './prisma';
+export { OctopusProxyScraper } from './scraper';
 import { VersionInterface } from './interface/version.interface';
 export declare class OctopusProxyServer {
     private app?;
