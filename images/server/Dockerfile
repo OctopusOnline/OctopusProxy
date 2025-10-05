@@ -12,10 +12,8 @@ RUN apt update \
  && apt install -y openssl
 
 USER node
-COPY lerna.json package.json package-lock.json ./
-COPY packages/server ./packages/server
-COPY images/server/src/package*.json ./
-RUN npm i --no-update-notifier
+COPY src/package*.json ./
+RUN npm ci --no-update-notifier
 
 COPY images/server/src/ ./
 USER root
