@@ -15,7 +15,7 @@ USER node
 COPY src/package*.json ./
 RUN npm ci --no-update-notifier
 
-COPY images/server/src/ ./
+COPY src/ ./
 USER root
 RUN chmod +x ./entrypoint.sh
 
