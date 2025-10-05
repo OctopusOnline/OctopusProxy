@@ -18,15 +18,21 @@ export async function prismaGenerate(): Promise<void> {
 
 export async function prismaMigrate(databaseUrl: string): Promise<void> {
   const url = new URL(databaseUrl);
-  if (url.protocol === 'mariadb:') url.protocol = 'mysql:';
-  process.env.PRISMA_DATABASE_URL = url.toString();
-
+  if (url.protocol === 'mariadb:')
+    url.protocol = 'mysql:';
   const schemaPath = resolve(__dirname, '../prisma/schema.prisma');
+  const execOptions = {
+    env: {
+      ...process.env,
+      PRISMA_DATABASE_URL: url.href,
+    },
+  };
+
   try {
-    await promisify(exec)(`prisma migrate deploy --schema=${schemaPath}`);
+    await promisify(exec)(`prisma migrate deploy --schema=${schemaPath}`, execOptions);
   } catch (error) {
     Logger.warn('Prisma migrate command failed, trying with npx...', 'PrismaClient');
-    await promisify(exec)(`npx prisma migrate deploy --schema=${schemaPath}`);
+    await promisify(exec)(`npx prisma migrate deploy --schema=${schemaPath}`, execOptions);
   }
   Logger.log('Prisma migrations deployed', 'PrismaClient');
 }

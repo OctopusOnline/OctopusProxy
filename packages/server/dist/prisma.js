@@ -38,14 +38,16 @@ function prismaMigrate(databaseUrl) {
         const url = new node_url_1.URL(databaseUrl);
         if (url.protocol === 'mariadb:')
             url.protocol = 'mysql:';
-        node_process_1.default.env.PRISMA_DATABASE_URL = url.toString();
         const schemaPath = (0, node_path_1.resolve)(__dirname, '../prisma/schema.prisma');
+        const execOptions = {
+            env: Object.assign(Object.assign({}, node_process_1.default.env), { PRISMA_DATABASE_URL: url.href }),
+        };
         try {
-            yield (0, node_util_1.promisify)(node_child_process_1.exec)(`prisma migrate deploy --schema=${schemaPath}`);
+            yield (0, node_util_1.promisify)(node_child_process_1.exec)(`prisma migrate deploy --schema=${schemaPath}`, execOptions);
         }
         catch (error) {
             common_1.Logger.warn('Prisma migrate command failed, trying with npx...', 'PrismaClient');
-            yield (0, node_util_1.promisify)(node_child_process_1.exec)(`npx prisma migrate deploy --schema=${schemaPath}`);
+            yield (0, node_util_1.promisify)(node_child_process_1.exec)(`npx prisma migrate deploy --schema=${schemaPath}`, execOptions);
         }
         common_1.Logger.log('Prisma migrations deployed', 'PrismaClient');
     });
