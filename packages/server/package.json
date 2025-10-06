@@ -1,6 +1,6 @@
 {
   "name": "@octopusproxy/server",
-  "version": "1.15.7",
+  "version": "1.16.0",
   "description": "",
   "author": "official5ETa",
   "license": "Apache-2.0 license",
@@ -18,7 +18,6 @@
     "watch": "tsc --watch",
     "clean": "rm -rf tsconfig.tsbuildinfo dist prisma/client",
     "prisma:migrate": "prisma migrate deploy",
-
     "prebuild": "npm run clean"
   },
   "dependencies": {
