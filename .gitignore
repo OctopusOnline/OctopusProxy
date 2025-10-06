@@ -1,6 +1,2 @@
-/.idea
-/test
-/node_modules
-/.env
 /docker-compose.*.yml
-/packages/server/generated
+/.env

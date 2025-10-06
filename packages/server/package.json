@@ -6,14 +6,20 @@
   "license": "Apache-2.0 license",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "prisma"
+  ],
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
     "build": "prisma generate && tsc",
     "watch": "tsc --watch",
-    "clean": "rm -rf tsconfig.tsbuildinfo dist generated",
-    "prisma:migrate": "prisma migrate deploy"
+    "clean": "rm -rf tsconfig.tsbuildinfo dist prisma/client",
+    "prisma:migrate": "prisma migrate deploy",
+
+    "prebuild": "npm run clean"
   },
   "dependencies": {
     "@nestjs/common": "^11.1.3",

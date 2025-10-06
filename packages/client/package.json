@@ -6,13 +6,18 @@
   "license": "Apache-2.0 license",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
     "build": "tsc",
     "watch": "tsc --watch",
-    "clean": "rm -rf tsconfig.tsbuildinfo dist"
+    "clean": "rm -rf tsconfig.tsbuildinfo dist",
+
+    "prebuild": "npm run clean"
   },
   "dependencies": {
     "@octopuscentral/instance": ">=1.15.0",
