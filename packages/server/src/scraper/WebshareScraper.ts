@@ -49,7 +49,7 @@ export class WebshareScraper implements ScraperInterface {
     for (const searchParam of Object.keys(searchParams))
       url.searchParams.append(searchParam, searchParams[searchParam])
 
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       const request: ClientRequest = https.request({
         method  : method.toUpperCase(),
         port    : 443,
@@ -62,11 +62,11 @@ export class WebshareScraper implements ScraperInterface {
       }, response => {
         let json = "";
         response.on("data" , buffer => json += buffer.toString());
-        response.on("error", error  => { throw error });
+        response.on("error", error  => reject(error));
         response.on("end"  , ()     => resolve({data: JSON.parse(json.toString()), response}));
       });
 
-      request.on("error", error => { throw error });
+      request.on("error", error => reject(error));
       request.end();
     });
   }
