@@ -12,7 +12,7 @@
   "scripts": {
     "build": "prisma generate && tsc",
     "watch": "tsc --watch",
-    "clean": "rm -rf dist",
+    "clean": "rm -rf tsconfig.tsbuildinfo dist generated",
     "prisma:migrate": "prisma migrate deploy"
   },
   "dependencies": {
