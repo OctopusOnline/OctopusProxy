@@ -16,7 +16,7 @@
   "scripts": {
     "build": "prisma generate && tsc",
     "watch": "tsc --watch",
-    "clean": "rm -rf tsconfig.tsbuildinfo dist prisma/client",
+    "clean": "rm -rf tsconfig.tsbuildinfo dist",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate deploy",
     "prebuild": "npm run clean"
