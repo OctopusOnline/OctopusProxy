@@ -5,7 +5,7 @@ if [ -n "$DATABASE_URL" ]; then
 fi
 
 echo "Generating prisma client..."
-npm run prisma:generate --prefix ./node_modules/@octopusproxy/server
+npm run prisma:generate --prefix ./node_modules/@octopusproxy/server > /dev/null
 
 echo "Running database migrations..."
 npm run prisma:migrate --prefix ./node_modules/@octopusproxy/server
