@@ -1,6 +1,5 @@
-import { OctopusProxyServer, OctopusProxyScraper } from "@octopusproxy/server";
+import { OctopusProxyServer, OctopusProxyScraper, Logger } from "@octopusproxy/server";
 import { onExitSignal, stringToBoolean, stringToInt } from "./utils.js";
-import { Logger } from "@nestjs/common";
 
 
 if (!process.env.DATABASE_URL?.trim()) {

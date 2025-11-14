@@ -12,9 +12,3 @@ export interface OctopusProxyServerInterface {
   host: OctopusProxyServerHost;
   port: OctopusProxyServerPort;
 }
-
-export interface OctopusProxyServerConstructorParamInterface {
-  protocol?: OctopusProxyServerProtocol;
-  host?: OctopusProxyServerHost;
-  port?: OctopusProxyServerPort;
-}
