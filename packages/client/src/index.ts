@@ -83,9 +83,15 @@ export class OctopusProxyClient {
     }
   }
 
-  toProxyUrl(proxy: { ip: string; port: number; username: string; password: string }): string | undefined {
+  toProxyUrl(proxy: {
+    protocol?: 'http' | 'https';
+    ip: string;
+    port: number;
+    username: string;
+    password: string
+  }): string | undefined {
     return proxy
-      ? `http://${proxy.username}:${proxy.password}@${proxy.ip}:${proxy.port}`
+      ? `${proxy.protocol || 'http'}://${proxy.username}:${proxy.password}@${proxy.ip}:${proxy.port}`
       : undefined;
   }
 }
