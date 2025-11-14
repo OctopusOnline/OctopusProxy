@@ -23,6 +23,6 @@
     "@types/express": "<5.0.0",
     "@types/node": "20.14.8",
     "typescript": "^5.9.3",
-    "lerna": "^9.0.0"
+    "lerna": "^9.0.1"
   }
 }

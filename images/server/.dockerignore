@@ -1,1 +1,4 @@
+docker-compose*.yml
+build.sh
+.gitignore
 src/node_modules

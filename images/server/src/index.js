@@ -3,30 +3,27 @@ import { onExitSignal, stringToBoolean, stringToInt } from "./utils.js";
 import { Logger } from "@nestjs/common";
 
 
-
-if (!process.env.DATABASE_URL) {
+if (!process.env.DATABASE_URL?.trim()) {
   Logger.error('DATABASE_URL is not set', 'Bootstrap');
   process.exit(1);
 }
-
 
 
 let scraper;
 if (stringToBoolean(process.env.SCRAPER)) {
 
   const scrapers = [
-    ...(stringToBoolean(process.env.SCRAPER_WEBSHARE) ? [new OctopusProxyScraper.scraper.webshare(process.env.SCRAPER_WEBSHARE_API_TOKEN)] : [])
+    ...(stringToBoolean(process.env.SCRAPER_WEBSHARE) ? [new OctopusProxyScraper.scrapers.webshare(process.env.SCRAPER_WEBSHARE_API_TOKEN)] : [])
   ];
 
   if (scrapers.length > 0) {
     scraper = new OctopusProxyScraper(scrapers);
-    await scraper.startScrapeLoop();
+    await scraper.startScrapeLoop(stringToInt(process.env.SCRAPER_FETCH_INTERVAL));
 
     Logger.log('Scraper started', 'Bootstrap');
   }
   else Logger.warn('No scrapers set', 'Bootstrap');
 }
-
 
 
 let server;
@@ -35,11 +32,10 @@ if (stringToBoolean(process.env.SERVER)) {
   server = new OctopusProxyServer();
   await server.start(stringToInt(process.env.SERVER_PORT));
 
-  onExitSignal(async () => await server.stop());
+  onExitSignal(() => server.stop());
 
   Logger.log('Server started', 'Bootstrap');
 }
-
 
 
 if (!scraper && !server) {

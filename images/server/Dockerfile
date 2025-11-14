@@ -2,24 +2,28 @@ FROM node:20.19-slim
 
 WORKDIR /home/node
 
-ENV DEBUG=false \
-    SCRAPER=true \
-    SERVER=true \
-    SERVER_PORT=8283
+ENV SERVER=true \
+    SERVER_PORT=8283 \
+    SCRAPER=false \
+    SCRAPER_FETCH_INTERVAL=900000
 
 USER root
 RUN apt update \
- && apt install -y openssl
+ && apt install -y openssl \
+ && apt autoremove -y \
+ && apt clean \
+ && rm -rf /var/lib/apt/lists/*
 
 USER node
 COPY src/package*.json ./
-RUN npm ci --no-update-notifier
+RUN npm ci --no-update-notifier \
+ && npm cache clean --force
 
 COPY src/ ./
 USER root
 RUN chmod +x ./entrypoint.sh
 
-EXPOSE 8283
+EXPOSE ${SERVER_PORT}
 
 USER node
 ENTRYPOINT ["./entrypoint.sh"]

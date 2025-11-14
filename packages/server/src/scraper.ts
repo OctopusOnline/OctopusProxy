@@ -4,19 +4,19 @@ import { ScraperInterface } from './interface/Scraper.interface';
 import { WebshareScraper } from './scraper/WebshareScraper';
 
 export class OctopusProxyScraper {
-  static readonly scraper = {
+  static readonly scrapers = {
     webshare: WebshareScraper
   };
 
   private readonly prisma: PrismaClient;
-  private readonly scraper: ScraperInterface[];
+  private readonly scrapers: ScraperInterface[];
 
-  constructor(scraper: ScraperInterface[]) {
+  constructor(scrapers: ScraperInterface[]) {
     this.prisma = new PrismaClient();
-    this.scraper = scraper;
+    this.scrapers = scrapers;
   }
 
-  async connect() {
+  async connect(): Promise<void> {
     await this.prisma.$connect();
   }
 
@@ -98,9 +98,9 @@ export class OctopusProxyScraper {
   }
 
   public async scrapeAll(): Promise<void> {
-    for (const scraper of this.scraper)
+    for (const scraper of this.scrapers)
       await scraper.fetchProxies()
-        .then(async proxies => await this.syncProxies(proxies))
+        .then(proxies => this.syncProxies(proxies))
         .catch(error => Logger.error(`FetchError: ${scraper.vendor}: ${error}`, OctopusProxyScraper.name));
   }
 }
