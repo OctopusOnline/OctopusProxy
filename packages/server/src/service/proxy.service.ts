@@ -7,7 +7,7 @@ import { PrismaService } from './prisma.service';
 export class ProxyService {
   constructor(private readonly prisma: PrismaService) {}
 
-  getProxyIpReservations(
+  async getProxyIpReservations(
     serviceId?: string,
     instanceId?: string,
     prisma: PrismaClient | PrismaTransactionClient = this.prisma
