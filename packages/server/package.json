@@ -1,18 +1,18 @@
 {
   "name": "@octopusproxy/server",
-  "version": "1.16.9",
+  "version": "1.16.10",
   "description": "",
   "author": "official5ETa",
   "license": "Apache-2.0 license",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
-  ".": {
-    "import": "./dist/index.js",
-    "require": "./dist/index.js",
-    "types": "./dist/index.d.ts"
-  }
-},
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "files": [
     "./dist/**/*.js",
     "./dist/**/*.js.map",
