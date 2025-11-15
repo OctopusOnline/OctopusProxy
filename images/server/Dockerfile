@@ -7,13 +7,6 @@ ENV SERVER=true \
     SCRAPER=false \
     SCRAPER_FETCH_INTERVAL=900000
 
-USER root
-RUN apt update \
- && apt install -y openssl \
- && apt autoremove -y \
- && apt clean \
- && rm -rf /var/lib/apt/lists/*
-
 USER node
 COPY src/package*.json ./
 RUN npm ci --no-update-notifier \
