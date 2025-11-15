@@ -1,8 +1,11 @@
 FROM node:20.19-slim
 
+ARG TZ="Europe/Berlin"
+
 WORKDIR /home/node
 
-ENV SERVER=true \
+ENV TZ=${TZ} \
+    SERVER=true \
     SERVER_PORT=8283 \
     SCRAPER=false \
     SCRAPER_FETCH_INTERVAL=900000
