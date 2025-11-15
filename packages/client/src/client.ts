@@ -1,4 +1,4 @@
-import { VersionInterface, OctopusProxyServerInterface } from './interface';
+import { VersionInterface, ProxyBaseInterface, ProxyInterface, OctopusProxyServerInterface } from './interfaces';
 import { Instance } from '@octopuscentral/instance';
 import axios from 'axios';
 import { join } from 'path';
@@ -10,11 +10,11 @@ export class OctopusProxyClient {
 
   private readonly version: VersionInterface;
 
-  private get baseUrl(): string {
+  private get serverBaseUrl(): string {
     return `${this.server.protocol}://${this.server.host}:${this.server.port}/api`;
   }
 
-  constructor(instance: Instance, server: Partial<OctopusProxyServerInterface>) {
+  constructor(instance: Instance, server: Partial<OctopusProxyServerInterface> = {}) {
     this.instance = instance;
     this.server = {
       protocol: server.protocol ?? 'http',
@@ -34,7 +34,7 @@ export class OctopusProxyClient {
   }
 
   async getServerVersion(): Promise<VersionInterface> {
-    const response = await axios.get(`${this.baseUrl}/version`);
+    const response = await axios.get(`${this.serverBaseUrl}/version`);
     if (response.status !== 200)
       throw new Error(`Error: ${response.statusText}`);
 
@@ -51,30 +51,25 @@ export class OctopusProxyClient {
     instanceIdentifier: string,
     country?: string,
     reserve: boolean = true,
-  ): Promise<{
-    id: string;
-    ip: string;
-    port: number;
-    username: string;
-    password: string;
-    country: string;
-    active: boolean;
-  } | undefined> {
-    if (!instanceIdentifier)
+  ): Promise<ProxyInterface | undefined> {
+    if (!this.instance.serviceName?.trim())
+      throw new Error('no service name given in instance!');
+
+    if (!instanceIdentifier?.trim())
       throw new Error('no instance identifier given!');
 
     await this.matchServerVersion();
 
-    const url = new URL(`${this.baseUrl}/proxy`);
+    const url = new URL(`${this.serverBaseUrl}/proxy`);
     url.searchParams.append('serviceId', this.instance.serviceName);
     url.searchParams.append('instanceId', instanceIdentifier);
-    url.searchParams.append('reserve', reserve.toString());
+    url.searchParams.append('reserve', reserve ? 'true' : 'false');
     if (country) url.searchParams.append('country', country);
 
     try {
       const response = await axios.get(url.href);
       if (response.status !== 200)
-        throw new Error(`Error: ${response.statusText}`);
+        throw new Error(response.statusText);
 
       return response.data.proxy || undefined;
     }
@@ -83,14 +78,8 @@ export class OctopusProxyClient {
     }
   }
 
-  toProxyUrl(proxy: {
-    protocol?: 'http' | 'https';
-    ip: string;
-    port: number;
-    username: string;
-    password: string
-  }): string | undefined {
-    return proxy
+  toProxyUrl(proxy: ProxyBaseInterface & { protocol?: 'http' | 'https' }): string | undefined {
+    return (proxy.ip && proxy.port && proxy.username && proxy.password)
       ? `${proxy.protocol || 'http'}://${proxy.username}:${proxy.password}@${proxy.ip}:${proxy.port}`
       : undefined;
   }
