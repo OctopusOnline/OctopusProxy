@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma, PrismaClient, Proxy, ProxyIpReservation } from '@prisma/client';
-import { PrismaTransactionClient } from "../interface/prisma.interface";
+import { PrismaTransactionClient } from '../interface/prisma.interface';
 import { PrismaService } from './prisma.service';
 
 @Injectable()
