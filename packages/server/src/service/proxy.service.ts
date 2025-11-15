@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { Proxy, ProxyIpReservation } from '@prisma/client';
+import { Prisma, PrismaClient, Proxy, ProxyIpReservation } from '@prisma/client';
+import { PrismaTransactionClient } from "../interface/prisma.interface";
 import { PrismaService } from './prisma.service';
 
 @Injectable()
@@ -8,13 +9,14 @@ export class ProxyService {
 
   getProxyIpReservations(
     serviceId?: string,
-    instanceId?: string
+    instanceId?: string,
+    prisma: PrismaClient | PrismaTransactionClient = this.prisma
   ): Promise<ProxyIpReservation[]> {
     const where: { serviceId?: string; instanceId?: string } = {};
     if (serviceId) where.serviceId = serviceId;
     if (instanceId) where.instanceId = instanceId;
 
-    return this.prisma.proxyIpReservation.findMany({ where });
+    return prisma.proxyIpReservation.findMany({ where });
   }
 
   async getProxy(
@@ -23,43 +25,45 @@ export class ProxyService {
     country?: string,
     reserve: boolean = true
   ): Promise<Proxy | undefined> {
-    let proxy: Proxy | undefined;
+    if (!serviceId) throw new Error('serviceId param not specified');
+    if (!instanceId) throw new Error('instanceId param not specified');
 
-    const proxyReservations = await this.getProxyIpReservations(serviceId);
-    const ownProxyReservations = proxyReservations.filter(proxyReservation =>
-      proxyReservation.instanceId === instanceId
-    );
+    return await this.prisma.$transaction(async prisma => {
+      let proxy: Proxy | undefined;
 
-    if (ownProxyReservations.length > 0) {
-      const proxyWhere: { active: true; OR: { ip: string }[]; country?: string } = {
-        active: true,
-        OR: ownProxyReservations.map(proxyReservation => ({ ip: proxyReservation.ip }))
-      };
-      if (country) proxyWhere.country = country;
+      const proxyReservations = await this.getProxyIpReservations(serviceId, undefined, prisma);
+      const ownProxyReservations = proxyReservations.filter(ownProxyReservation =>
+        ownProxyReservation.instanceId === instanceId
+      );
 
-      proxy = await this.prisma.proxy.findFirst({ where: proxyWhere });
-    }
-
-    if (!proxy) {
-      proxy = await this.prisma.$transaction(async prisma => {
-        const proxyReservations = await prisma.proxyIpReservation.findMany({ where: { serviceId } });
-
-        const proxyWhere: { active: true; country?: string; NOT?: { ip: { in: string[] } } } = { active: true };
+      if (ownProxyReservations.length > 0) {
+        const where: { active: true; country?: string; OR: { ip: string }[]; } = {
+          active: true,
+          OR: ownProxyReservations.map(ownProxyReservation => ({ ip: ownProxyReservation.ip }))
+        };
 
         if (country)
-          proxyWhere.country = country;
+          where.country = country;
+
+        proxy = await prisma.proxy.findFirst({ where });
+      }
+
+      if (!proxy) {
+        const where: { active: true; country?: string; ip?: { notIn: string[] } } = { active: true };
+
+        if (country)
+          where.country = country;
 
         if (proxyReservations.length > 0)
-          proxyWhere.NOT = { ip: { in: proxyReservations.map(proxyReservation => proxyReservation.ip) } };
+          where.ip = { notIn: proxyReservations.map(proxyReservation => proxyReservation.ip) };
 
-        const selectedProxy = await prisma.proxy.findFirst({ where: proxyWhere });
-        if (!selectedProxy) return undefined;
+        proxy = await prisma.proxy.findFirst({ where });
 
-        if (reserve) {
+        if (proxy && reserve) {
           await prisma.proxyIpReservation.upsert({
             where: {
               ip_serviceId: {
-                ip: selectedProxy.ip,
+                ip: proxy.ip,
                 serviceId,
               }
             },
@@ -67,17 +71,18 @@ export class ProxyService {
               instanceId,
             },
             create: {
-              ip: selectedProxy.ip,
+              ip: proxy.ip,
               serviceId,
               instanceId,
             },
           });
         }
+      }
 
-        return selectedProxy;
-      });
-    }
-
-    return proxy;
+      return proxy;
+    }, {
+      isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
+      maxWait: 5e3,
+    });
   }
 }
