@@ -1,8 +1,8 @@
 import { ScraperInterface } from '../interface/Scraper.interface';
 import { Proxy } from '@prisma/client';
-import https from 'node:https';
-import { ClientRequest, IncomingMessage } from 'node:http';
-import { join } from 'node:path';
+import https from 'https';
+import { ClientRequest, IncomingMessage } from 'http';
+import { join } from 'path';
 
 interface WebshareFetchProxiesResponseInterface {
   count: number;
@@ -27,7 +27,7 @@ interface WebshareFetchProxiesResponseInterface {
 
 export class WebshareScraper implements ScraperInterface {
   readonly vendor = 'webshare';
-  private readonly apiUrl = "https://proxy.webshare.io/api/v2";
+  private readonly apiUrl = 'https://proxy.webshare.io/api/v2';
 
   private readonly apiToken: string;
   private readonly fetchCount: number;
@@ -54,28 +54,28 @@ export class WebshareScraper implements ScraperInterface {
         method  : method.toUpperCase(),
         port    : 443,
         hostname: url.hostname,
-        path    : url.pathname + (url.search || ""),
+        path    : url.pathname + (url.search || ''),
         headers : {
           ...headers,
-          "Authorization": `Token ${this.apiToken}`
+          'Authorization': `Token ${this.apiToken}`
         }
       }, response => {
-        let json = "";
-        response.on("data" , buffer => json += buffer.toString());
-        response.on("error", error  => reject(error));
-        response.on("end"  , ()     => resolve({data: JSON.parse(json.toString()), response}));
+        let json = '';
+        response.on('data' , buffer => json += buffer.toString());
+        response.on('error', error  => reject(error));
+        response.on('end'  , ()     => resolve({data: JSON.parse(json.toString()), response}));
       });
 
-      request.on("error", error => reject(error));
+      request.on('error', error => reject(error));
       request.end();
     });
   }
 
   async fetchProxies(): Promise<Proxy[]> {
-    const result = (await this.apiRequest('GET', "proxy/list/", {
-      "mode": "direct",
-      "page": "1",
-      "page_size": this.fetchCount.toString()
+    const result = (await this.apiRequest('GET', 'proxy/list/', {
+      'mode': 'direct',
+      'page': '1',
+      'page_size': this.fetchCount.toString()
     })).data as WebshareFetchProxiesResponseInterface;
 
     return result.results.map(proxy => ({

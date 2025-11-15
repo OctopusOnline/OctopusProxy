@@ -1,5 +1,5 @@
-import { OctopusProxyServer, OctopusProxyScraper, Logger } from "@octopusproxy/server";
-import { onExitSignal, stringToBoolean, stringToInt } from "./utils.js";
+import { OctopusProxyServer, OctopusProxyScraper, Logger } from '@octopusproxy/server';
+import { onExitSignal, stringToBoolean, stringToInt } from './utils.js';
 
 
 if (!process.env.DATABASE_URL?.trim()) {
