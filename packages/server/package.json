@@ -6,9 +6,19 @@
   "license": "Apache-2.0 license",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+  ".": {
+    "import": "./dist/index.js",
+    "require": "./dist/index.js",
+    "types": "./dist/index.d.ts"
+  }
+},
   "files": [
-    "dist",
-    "prisma"
+    "./dist/**/*.js",
+    "./dist/**/*.js.map",
+    "./dist/**/*.d.ts",
+    "./prisma/schema.prisma",
+    "./prisma/migrations/**/*"
   ],
   "publishConfig": {
     "access": "public"
