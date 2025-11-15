@@ -6,5 +6,6 @@ import { ProxyService } from '../service/proxy.service';
 @Module({
   controllers: [ProxyController],
   providers: [ProxyService, PrismaService],
+  exports: [ProxyService],
 })
 export class ProxyModule {}

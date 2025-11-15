@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { ProxyIpReservation } from '@prisma/client';
-import { PrismaService } from './prisma.service';
+import { ProxyService } from './proxy.service';
 
 @Injectable()
 export class SyncService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly proxyService: ProxyService) {}
 
   async getReservations(): Promise<ProxyIpReservation[]> {
-    return this.prisma.proxyIpReservation.findMany();
+    return await this.proxyService.getProxyIpReservations();
   }
 }
