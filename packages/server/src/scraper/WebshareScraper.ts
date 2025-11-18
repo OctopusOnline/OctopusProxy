@@ -37,12 +37,12 @@ export class WebshareScraper implements ScraperInterface {
     this.fetchCount = fetchCount;
   }
 
-  private apiRequest(
+  private apiRequest<D extends object>(
     method: 'GET' | 'POST' | string = 'GET',
     path: string,
     searchParams: { [key: string]: string } = {},
     headers: object = {}
-  ): Promise<{ data: object, response: IncomingMessage }> {
+  ): Promise<{ data: D, response: IncomingMessage }> {
     const url = new URL(this.apiUrl);
     url.pathname = join(url.pathname, path);
 
@@ -63,7 +63,10 @@ export class WebshareScraper implements ScraperInterface {
         let json = '';
         response.on('data' , buffer => json += buffer.toString());
         response.on('error', error  => reject(error));
-        response.on('end'  , ()     => resolve({data: JSON.parse(json.toString()), response}));
+        response.on('end'  , ()     => {
+          try { resolve({ data: JSON.parse(json.toString()), response }) }
+          catch (error) { reject(error as Error) }
+        });
       });
 
       request.on('error', error => reject(error));
@@ -72,13 +75,14 @@ export class WebshareScraper implements ScraperInterface {
   }
 
   async fetchProxies(): Promise<Proxy[]> {
-    const result = (await this.apiRequest('GET', 'proxy/list/', {
-      'mode': 'direct',
-      'page': '1',
-      'page_size': this.fetchCount.toString()
-    })).data as WebshareFetchProxiesResponseInterface;
+    const { data } = await this.apiRequest<WebshareFetchProxiesResponseInterface>(
+      'GET', 'proxy/list/', {
+        'mode': 'direct',
+        'page': '1',
+        'page_size': this.fetchCount.toString()
+    });
 
-    return result.results.map(proxy => ({
+    return data.results.map(proxy => ({
       ip:       proxy.proxy_address,
       port:     proxy.port,
       username: proxy.username,

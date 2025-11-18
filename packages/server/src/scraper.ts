@@ -100,7 +100,7 @@ export class OctopusProxyScraper {
   public async scrapeAll(): Promise<void> {
     for (const scraper of this.scrapers)
       await scraper.fetchProxies()
-        .then(proxies => this.syncProxies(proxies))
+        .then(async proxies => await this.syncProxies(proxies))
         .catch(error => Logger.error(`FetchError: ${scraper.vendor}: ${error}`, OctopusProxyScraper.name));
   }
 }
