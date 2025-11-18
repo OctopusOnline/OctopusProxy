@@ -82,6 +82,9 @@ export class WebshareScraper implements ScraperInterface {
         'page_size': this.fetchCount.toString()
     });
 
+    if (!Array.isArray(data?.results))
+      throw new Error(`invalid fetch results: '${data?.results}'`);
+
     return data.results.map(proxy => ({
       ip:       proxy.proxy_address,
       port:     proxy.port,
