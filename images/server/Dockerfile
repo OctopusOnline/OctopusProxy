@@ -5,6 +5,7 @@ ARG TZ="Europe/Berlin"
 WORKDIR /home/node
 
 ENV TZ=${TZ} \
+    PRISMA_HIDE_UPDATE_MESSAGE=true \
     SERVER=true \
     SERVER_PORT=8283 \
     SCRAPER=false \
